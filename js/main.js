@@ -1,3 +1,4 @@
 import { generate25Posts } from './data.js';
+import { drawMiniatures } from './miniatureDrawer.js';
 
-generate25Posts();
+drawMiniatures(generate25Posts());
