@@ -1,6 +1,30 @@
 /* Общие стили. Каркас
    ========================================================================== */
 
+.message {
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    width: fit-content;
+    height: fit-content;
+    transform: translateX(-50%);
+    border-radius: 10000px;
+    padding: 1em;
+    z-index: 100000000;
+    transition: opacity 0.3s ease;
+    opacity: 1000;
+    background-color: #A3D78A;
+}
+
+.message.hidden {
+    opacity: 0;
+}
+.message.message__error {
+    background-color: #DC143C;
+    
+}
+
 @font-face {
   font-family: "Open Sans";
   src: url("../fonts/OpenSansCondensed-Bold.woff2") format("woff2"),
