@@ -1,7 +1,6 @@
 import { sendData } from './requests.js';
 
 const form = document.querySelector('.img-upload__form');
-const pristine = new Pristine(form);
 
 const imgInput = document.querySelector('.img-upload__input');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -14,33 +13,16 @@ const scaleValueInput = document.querySelector('.scale__control--value');
 const scaleSmallerBtn = document.querySelector('.scale__control--smaller');
 const scaleBiggerBtn = document.querySelector('.scale__control--bigger');
 const imgPreview = document.querySelector('.img-upload__preview');
+const imgPreviewImg = imgPreview.querySelector('img');
+
+const hashtagInput = form.querySelector('.text__hashtags');
 
 const slider = document.querySelector('.effect-level__slider');
 
 const filterFieldset = document.querySelector('.img-upload__effects');
 const effectValue = document.querySelector('.effect-level__value');
 const effectContainer = document.querySelector('.img-upload__effect-level');
-
-const clear = () => {
-  slider.noUiSlider.set(100);
-  form.reset();
-  pristine.reset();
-};
-const close = () => {
-  uploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  imgInput.value = null;
-  clear();
-};
-
-const open = () => {
-  uploadOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-};
-
-const scalePreview = (to) => {
-  imgPreview.style.transform = `scale(${to / 100})`;
-};
+const pristine = new Pristine(form, { showTooltip: false });
 
 const getEffectValue = (effect, value) => {
   switch (effect) {
@@ -56,6 +38,7 @@ const getEffectValue = (effect, value) => {
       return (value * 3) / 100;
   }
 };
+
 const filters = {
   none: () => 'none',
   chrome: (value) => `grayscale(${getEffectValue('chrome', value)})`,
@@ -65,9 +48,33 @@ const filters = {
   heat: (value) => `brightness(${getEffectValue('heat', value)})`,
 };
 
+const scalePreview = (to) => {
+  imgPreviewImg.style.transform = `scale(${to / 100})`;
+};
+
+const clear = () => {
+  slider.noUiSlider.set(100);
+  imgPreviewImg.style.filter = filters['none']();
+  scalePreview(100);
+  form.reset();
+  pristine.reset();
+};
+const close = () => {
+  uploadOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  imgInput.value = null;
+};
+
+const open = () => {
+  uploadOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+};
+
+const isOpen = () => !uploadOverlay.classList.contains('hidden');
+
 const applyFilter = (filter, value) => {
   effectValue.value = value;
-  imgPreview.style.filter = filters[filter](value);
+  imgPreviewImg.style.filter = filters[filter](value);
 };
 
 for (const field of Array.from(formFields)) {
@@ -77,6 +84,43 @@ for (const field of Array.from(formFields)) {
     }
   });
 }
+
+pristine.addValidator(
+  hashtagInput,
+  (value) => {
+    const arr = value
+      .trim()
+      .split(/\s+/)
+      .map((s) => s.toLowerCase());
+    if (arr.length <= 1) {
+      return true;
+    }
+    for (let i = 0; i < arr.length; i++) {
+      const elem = arr[i];
+      for (let j = arr.length - 1; j > i; j--) {
+        const comp = arr[j];
+        if (elem === comp) {
+          return false;
+        }
+      }
+    }
+    return true;
+  },
+  'Хештеги не могут повторяться',
+  10
+);
+pristine.addValidator(
+  hashtagInput,
+  (value) => {
+    const arr = value
+      .trim()
+      .split(/\s+/)
+      .map((s) => s.toLowerCase());
+    return arr.length <= 5;
+  },
+  'Можно указать максимум 5 хештегов',
+  11
+);
 
 scaleSmallerBtn.addEventListener('click', () => {
   const value = +scaleValueInput.value.replace('%', '');
@@ -89,8 +133,9 @@ scaleSmallerBtn.addEventListener('click', () => {
 });
 
 document.body.addEventListener('keyup', (e) => {
-  if (e.key === 'Escape') {
+  if ((e.key === 'Escape') & isOpen()) {
     close();
+    clear();
   }
 });
 
@@ -99,8 +144,9 @@ form.addEventListener('submit', async (e) => {
   if (pristine.validate()) {
     submitBtn.setAttribute('disabled', 'true');
     const result = await sendData(new FormData(form));
+    close();
     if (result) {
-      close();
+      clear();
     }
     submitBtn.removeAttribute('disabled');
   }
@@ -115,9 +161,7 @@ imgInput.addEventListener('change', () => {
       imgInput.files[0].type === 'image/jpg' ||
       imgInput.files[0].type === 'image/png')
   ) {
-    imgPreview
-      .querySelector('img')
-      .setAttribute('src', URL.createObjectURL(imgInput.files[0]));
+    imgPreviewImg.setAttribute('src', URL.createObjectURL(imgInput.files[0]));
     open();
   } else {
     close();

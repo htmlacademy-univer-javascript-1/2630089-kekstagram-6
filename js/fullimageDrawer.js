@@ -69,6 +69,7 @@ export function drawFullImage(image) {
 export function hideFullImage() {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  commentsList.innerHTML = '';
   commentLoader.removeEventListener('click', loaderFunction);
 }
 

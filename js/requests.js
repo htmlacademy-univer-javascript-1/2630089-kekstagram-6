@@ -1,4 +1,4 @@
-import { showMessage } from './util.js';
+import { addMessage } from './util.js';
 
 export const loadImages = async () => {
   try {
@@ -13,7 +13,7 @@ export const loadImages = async () => {
       data: await res.json(),
     };
   } catch (error) {
-    showMessage('Произошла какая-то ошибка при загрузке', true);
+    addMessage('Ошибка загрузки картинок', 'Блин =(', true);
     return { ok: false };
   }
 };
@@ -30,10 +30,12 @@ export const sendData = async (formData) => {
     if (!res.ok) {
       throw Error();
     }
-    showMessage('Картинка успешно загружена!');
+    addMessage('Изображение успешно загружено', 'Круто!');
     return true;
   } catch (error) {
-    showMessage('Произошла какая-то ошибка при отправке', true);
+    addMessage('Ошибка загрузки файла', 'Загрузить другой файл', true, () =>
+      document.querySelector('.img-upload__label').click()
+    );
     return false;
   }
 };

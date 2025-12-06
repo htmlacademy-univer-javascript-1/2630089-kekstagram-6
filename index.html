@@ -139,14 +139,16 @@
 
                                 <!-- Добавление хэш-тегов и комментария к изображению -->
                                 <fieldset class="img-upload__text text">
-                                    <div class="img-upload__field-wrapper">
+                                    <div class="img-upload__field-wrapper form-group">
                                         <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег"
-                                            data-pristine-pattern="/^(#[0-9A-Za-zА-Яа-я]{1,19}[ ]{0,}){1,5}$/">
+                                            data-pristine-pattern-message="Неправильный формат хештега: #hashtag до 20 символов" data-pristine-pattern="/^(#[0-9A-Za-zА-Яа-я]{1,19}[ ]{0,})+$/">
                                     </div>
-                                    <div class="img-upload__field-wrapper">
+                                    <div class="img-upload__field-wrapper form-group">
                                         <textarea class="text__description" name="description"
-                                            placeholder="Ваш комментарий..."
-                                            data-pristine-pattern="/^.{0,140}$/"></textarea>
+                                            placeholder="Ваш комментарий..." maxlength="140"
+                                            ></textarea>
+                                            <!-- data-pristine-pattern="/^.{0,140}$/" -->
+
                                     </div>
                                 </fieldset>
 
