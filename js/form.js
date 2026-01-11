@@ -24,6 +24,7 @@ const effectValue = document.querySelector('.effect-level__value');
 const effectContainer = document.querySelector('.img-upload__effect-level');
 const pristine = new Pristine(form, { showTooltip: false });
 
+let choosedFilter = 'none';
 function getEffectValue(effect, value) {
   switch (effect) {
     case 'chrome':
@@ -60,6 +61,9 @@ function clear() {
   pristine.reset();
 }
 function close() {
+  choosedFilter = 'none';
+  effectContainer.classList.add('hidden');
+  applyFilter(choosedFilter, Math.round(100));
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgInput.value = null;
@@ -179,7 +183,6 @@ export function configureForm() {
     },
   });
 
-  let choosedFilter = 'none';
   filterFieldset.addEventListener('click', (e) => {
     if (e.target.tagName === 'INPUT') {
       choosedFilter = e.target.value;
