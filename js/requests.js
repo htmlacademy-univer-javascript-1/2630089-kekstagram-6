@@ -1,9 +1,10 @@
 import { addMessage } from './util.js';
 
-export const loadImages = async () => {
+export const BASE_URL = 'https://29.javascript.htmlacademy.pro/kekstagram';
+export async function loadImages() {
   try {
     const res = await fetch(
-      'https://29.javascript.htmlacademy.pro/kekstagram/data'
+      `${BASE_URL}/data`
     );
     if (!res.ok) {
       throw Error();
@@ -16,15 +17,15 @@ export const loadImages = async () => {
     addMessage('Ошибка загрузки картинок', 'Блин =(', true);
     return { ok: false };
   }
-};
+}
 
-export const sendData = async (formData) => {
+export async function sendData(formData) {
   try {
     const res = await fetch(
-      'https://29.javascript.htmlacademy.pro/kekstagram',
+      `${BASE_URL}`,
       {
         method: 'POST',
-        body: formData, // тип контента автоматически будет multipart/form-data
+        body: formData,
       }
     );
     if (!res.ok) {
@@ -38,4 +39,4 @@ export const sendData = async (formData) => {
     );
     return false;
   }
-};
+}

@@ -1,9 +1,11 @@
-import './form.js';
-import './filters.js';
-import { drawMiniatures } from './miniatureDrawer.js';
+import { configureForm } from './form.js';
+import { configureFilters } from './filters.js';
+import { drawMiniatures } from './miniature-drawer.js';
 import { loadImages } from './requests.js';
 
-const start = async () => {
+async function start() {
+  configureForm();
+  configureFilters();
   const res = await loadImages();
   if (res.ok) {
     document
@@ -12,5 +14,5 @@ const start = async () => {
     window.IMAGES = res.data;
     drawMiniatures(res.data);
   }
-};
+}
 start();
