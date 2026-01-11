@@ -1,0 +1,33 @@
+import { drawFullImage } from './fullimage-drawer.js';
+
+const template = document.getElementById('picture');
+const picturesBlock = document.querySelector('.pictures');
+export function createMiniature(data) {
+  const miniature = template.content.cloneNode(true);
+  const img = miniature.querySelector('img');
+  img.setAttribute('src', data.url);
+  img.setAttribute('alt', data.description);
+  miniature.querySelector('.picture__likes').innerHTML = data.likes;
+  miniature.querySelector('.picture__comments').innerHTML =
+    data.comments.length;
+  miniature
+    .querySelector('.picture')
+    .addEventListener('click', () => drawFullImage(data));
+  return miniature;
+}
+
+export function clearMiniatures() {
+  picturesBlock
+    .querySelectorAll('.picture')
+    .forEach((element) => element.remove());
+}
+
+export function drawMiniatures(dataArr) {
+  clearMiniatures();
+  const fragment = document.createDocumentFragment();
+  for (const data of dataArr) {
+    const miniature = createMiniature(data);
+    fragment.appendChild(miniature);
+  }
+  picturesBlock.appendChild(fragment);
+}
