@@ -146,7 +146,7 @@ export function configureForm() {
   cancelBtn.addEventListener('click', close);
 
   function isGoodFileType(type) {
-    return type in ['image/jpeg', 'image/jpg', 'image/png'];
+    return ['image/jpeg', 'image/jpg', 'image/png'].includes(type);
   }
   imgInput.addEventListener('change', () => {
     if (
