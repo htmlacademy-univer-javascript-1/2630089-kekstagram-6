@@ -45,6 +45,7 @@ function loadComments(image) {
 }
 let loaderFunction;
 export function drawFullImage(image) {
+  loadedCommentsCount = 0;
   imageBlock.setAttribute('src', image.url);
   likesBlock.innerHTML = image.likes;
   commentsCount.innerHTML = image.comments.length;
